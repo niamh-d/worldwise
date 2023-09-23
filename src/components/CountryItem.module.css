@@ -17,3 +17,7 @@
   font-size: 3rem;
   line-height: 1;
 }
+
+.countryItem::-webkit-scrollbar {
+  width: 0;
+}
