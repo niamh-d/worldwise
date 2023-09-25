@@ -8,22 +8,26 @@ import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login, isAuthenticated } = useAuth();
-  // PRE-FILL FOR DEV PURPOSES
+  const { login, isAuthenticated, invalidCredentials } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   useEffect(
     function () {
-      if (isAuthenticated) navigate("/app/cities");
+      if (isAuthenticated) navigate("/app", { replace: true });
     },
-    [isAuthenticated]
+    [isAuthenticated, navigate]
   );
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (email && password) login(email, password);
+  }
 
   return (
     <main className={styles.login}>
       <PageNav />
-      <form className={styles.form}>
+      <form className={styles.form} onSubmit={handleSubmit}>
         <div className={styles.row}>
           <label htmlFor="email">Email address</label>
           <input
@@ -43,11 +47,13 @@ export default function Login() {
             value={password || "password"}
           />
         </div>
-
+        {invalidCredentials && (
+          <div>
+            <p>Incorrect email and/or password.</p>
+          </div>
+        )}
         <div>
-          <Button type="primary" onClick={(e) => login(e, email, password)}>
-            Login
-          </Button>
+          <Button type="primary">Login</Button>
         </div>
       </form>
     </main>

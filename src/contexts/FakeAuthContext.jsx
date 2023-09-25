@@ -7,12 +7,20 @@ const AuthContext = createContext();
 const initialState = {
   user: null,
   isAuthenticated: false,
+  invalidCredentials: false,
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case "login":
-      return { ...state, user: action.val, isAuthenticated: true };
+      return {
+        ...state,
+        user: action.val,
+        isAuthenticated: true,
+        invalidCredentials: false,
+      };
+    case "invalid":
+      return { ...state, invalidCredentials: true };
     case "logout":
       return { ...state, user: null, isAuthenticated: false };
     default:
@@ -28,12 +36,13 @@ const FAKE_USER = {
 };
 
 function AuthProvider({ children }) {
-  const [{ user, isAuthenticated }, dispatch] = useReducer(
+  const [{ user, isAuthenticated, invalidCredentials }, dispatch] = useReducer(
     reducer,
     initialState
   );
-  function login(e, email, password) {
-    e.preventDefault();
+  function login(email, password) {
+    if (email !== FAKE_USER.email || FAKE_USER.password !== password)
+      dispatch({ type: "invalid" });
     if (email === FAKE_USER.email && FAKE_USER.password === password)
       dispatch({ type: "login", val: FAKE_USER });
   }
@@ -43,7 +52,9 @@ function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, login, logout, invalidCredentials }}
+    >
       {children}
     </AuthContext.Provider>
   );
