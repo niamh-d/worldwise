@@ -1,3 +1,16 @@
 {
-  "cities": []
+  "cities": [
+    {
+      "cityName": "Tartu",
+      "country": "Estonia",
+      "emoji": "🇪🇪",
+      "date": "2024-02-19T12:23:57.861Z",
+      "notes": "lovely city",
+      "position": {
+        "lat": "58.378440677850776",
+        "lng": "26.721154505323053"
+      },
+      "id": 1
+    }
+  ]
 }
